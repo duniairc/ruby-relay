@@ -1,0 +1,28 @@
+bot:
+  nick: ruby-relay
+  user: relay
+  realname: https://github.com/somasonic/ruby-relay
+  nickservname: ruby-relay
+  nickservpass: password
+
+servers:
+  interlinked:
+    server: irc.interlinked.me
+    port: 6697
+    ssl: true
+    sasl: true
+    channel: testone
+  
+  staticbox:
+    server: irc.staticbox.net
+    port: 6697
+    ssl: true
+    sasl: false
+    channel: testtwo
+
+  alphachat:
+    server: irc.alphachat.net
+    port: 6697
+    ssl: true
+    sasl: true
+    channel: testthree

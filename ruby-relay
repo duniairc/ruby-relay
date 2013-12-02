@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+####
+## relay bot
+##
+## Copyright (c) 2013 Andrew Northall
+##
+## MIT License
+## See LICENSE file for details.
+####
+
+$:.unshift File.dirname(__FILE__)
+
+require 'yaml'
+require 'cinch'
+require 'cinch/plugins/identify'
+require 'lib/relay'
+require 'lib/logger'
+
+$config = YAML.load_file("config/config.yaml")
+$bots = Hash.new
+$zncs = Hash.new
+$threads = Array.new
+
+# Set up a bot for each server
+$config["servers"].each do |name, server|
+  bot = Cinch::Bot.new do
+    configure do |c|
+      c.nick = $config["bot"]["nick"]
+      c.user = $config["bot"]["user"]
+      c.realname = $config["bot"]["realname"]
+      c.server = server["server"]
+      c.ssl.use = server["ssl"]
+      c.port = server["port"]
+      c.channels = "#" + server["channel"]
+      unless server["sasl"] == false
+        c.sasl.username = $config["bot"]["nickservname"]
+        c.sasl.password = $config["bot"]["nickservpass"]
+        c.plugins.plugins = [RelayPlugin]
+      else
+        c.plugins.plugins = [RelayPlugin, Cinch::Plugins::Identify]
+        c.plugins.options[Cinch::Plugins::Identify] = {
+          :username => $config["bot"]["nickservname"],
+          :password => $config["bot"]["nickservpass"],
+          :type     => :nickserv,
+        }
+      end
+    end
+  end
+  bot.loggers.clear
+  bot.loggers << RelayLogger.new(name, File.open("log/irc-#{name}.log", "a"))
+  bot.loggers << RelayLogger.new(name, STDOUT)
+  bot.loggers.level = :info
+  if $config["admin"]["network"] == name
+    $adminbot = bot
+  end
+  $bots[name] = bot
+end
+
+# Start the bots
+
+$bots.each do |key, bot|
+  $threads << Thread.new { bot.start }
+end
+
+$threads.each { |t| t.join } # wait for other threads
