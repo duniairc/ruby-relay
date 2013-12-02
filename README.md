@@ -6,14 +6,14 @@ A ruby IRC relay bot that relays conversations across channels on many networks.
 Install
 =======
 
-   gem install cinch cinch-identify
-   git clone https://github.com/somasonic/ruby-relay.git
-   cd ruby-relay
-   cp config/config.yaml.example config/config.yaml
+    gem install cinch cinch-identify
+    git clone https://github.com/somasonic/ruby-relay.git
+    cd ruby-relay
+    cp config/config.yaml.example config/config.yaml
 
 Then configure your bot and start it using
 
-   ./ruby-relay
+    ./ruby-relay
 
 Support
 =======
