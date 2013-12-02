@@ -31,7 +31,7 @@ $config["servers"].each do |name, server|
       c.server = server["server"]
       c.ssl.use = server["ssl"]
       c.port = server["port"]
-      c.channels = "#" + server["channel"]
+      c.channels = ["#" + server["channel"]]
       unless server["sasl"] == false
         c.sasl.username = $config["bot"]["nickservname"]
         c.sasl.password = $config["bot"]["nickservpass"]
@@ -50,9 +50,6 @@ $config["servers"].each do |name, server|
   bot.loggers << RelayLogger.new(name, File.open("log/irc-#{name}.log", "a"))
   bot.loggers << RelayLogger.new(name, STDOUT)
   bot.loggers.level = :info
-  if $config["admin"]["network"] == name
-    $adminbot = bot
-  end
   $bots[name] = bot
 end
 

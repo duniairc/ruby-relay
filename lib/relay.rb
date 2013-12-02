@@ -27,11 +27,11 @@ class RelayPlugin
     end
     send_relay(message)
   end
-  
+
   def relay_nick(m)
     return if m.user.nick == @bot.nick
     network = Format(:bold, "[#{@bot.irc.network.name}]")
-    message = "#{network} - #{m.user.last_nick} (#{m.user.mask("%u@%h")}) " + \
+    message = "#{network} - #{m.user.last_nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
               "is now known as #{m.user.nick}."
     send_relay(message)
   end
@@ -46,7 +46,7 @@ class RelayPlugin
     else
       action = "parted the channel"
     end
-    message = "#{network} - #{m.user.nick} (#{m.user.mask("%u@%h")}) " + \
+    message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
 		          "has #{action}."
     send_relay(message)
   end
@@ -54,7 +54,7 @@ class RelayPlugin
   def relay_join(m)
     return if m.user.nick == @bot.nick
     network = Format(:bold, "[#{@bot.irc.network.name}]")
-    message = "#{network} - #{m.user.nick} (#{m.user.mask("%u@%h")}) " + \
+    message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
               "has joined the channel."
     send_relay(message)
   end
