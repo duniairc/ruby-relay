@@ -23,7 +23,7 @@ class RelayPlugin
   def relay(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == "#" + $config["servers"][netname]["channel"]
+    return unless m.channel == $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
     if m.action?
       message = "#{network} * #{m.user.nick} #{m.action_message}"
@@ -37,7 +37,7 @@ class RelayPlugin
     return if m.params.nil?
     return if @bot.irc.network.name.nil? #not connected yet
     netname = @bot.irc.network.name.to_s
-    return unless m.params[0] == "#" + $config["servers"][netname]["channel"]
+    return unless m.params[0] == $config["servers"][netname]["channel"]
     m.user.refresh
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
@@ -52,7 +52,7 @@ class RelayPlugin
   def relay_nick(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.user.channels.include? "#" + $config["servers"][netname]["channel"]
+    return unless m.user.channels.include? $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
     message = "#{network} - #{m.user.last_nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
               "is now known as #{m.user.nick}."
@@ -62,7 +62,7 @@ class RelayPlugin
   def relay_part(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == "#" + $config["servers"][netname]["channel"]
+    return unless m.channel == $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
     message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
@@ -80,11 +80,11 @@ class RelayPlugin
     
   def relay_kick(m)
     netname = @bot.irc.network.name.to_s
+    return unless m.channel == $config["servers"][netname]["channel"]
     if m.params[1].downcase == @bot.nick.downcase
-      Channel("#" + $config["servers"][netname]["channel"]).join
+      Channel($config["servers"][netname]["channel"]).join
       return
     end
-    return unless m.channel == "#" + $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
     message = "#{network} - #{m.params[1]} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
 		          "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
@@ -94,7 +94,7 @@ class RelayPlugin
   def relay_join(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == "#" + $config["servers"][netname]["channel"]
+    return unless m.channel == $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
     message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
@@ -106,7 +106,7 @@ class RelayPlugin
     $bots.each do |network, bot|
       unless bot.irc.network == @bot.irc.network
         begin
-          bot.irc.send("PRIVMSG ##{$config["servers"][network]["channel"]}" + \
+          bot.irc.send("PRIVMSG #{$config["servers"][network]["channel"]}" + \
                        " :#{m}")
         rescue => e
           # pass

@@ -11,18 +11,18 @@ servers:
     port: 6697
     ssl: true
     sasl: true
-    channel: testone
+    channel: "#testone"
   
   staticbox:
     server: irc.staticbox.net
     port: 6697
     ssl: true
     sasl: false
-    channel: testtwo
+    channel: "#testtwo"
 
   alphachat:
     server: irc.alphachat.net
     port: 6697
     ssl: true
     sasl: true
-    channel: testthree
+    channel: "#testthree"
