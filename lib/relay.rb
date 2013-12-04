@@ -38,10 +38,10 @@ class RelayPlugin
     return if @bot.irc.network.name.nil? #not connected yet
     netname = @bot.irc.network.name.to_s
     return unless m.params[0] == $config["servers"][netname]["channel"]
-    m.user.refresh
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
     else
+      m.user.refresh
       user = "#{m.user.nick} (#{m.user.mask.to_s.split("!")[1]})"
     end
     network = Format(:bold, "[#{@bot.irc.network.name}]")
