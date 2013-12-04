@@ -12,7 +12,9 @@ class RelayPlugin
   include Cinch::Plugin
   
   listen_to :message, method: :relay
-  listen_to :leaving, method: :relay_part
+  listen_to :part, method: :relay_part
+  listen_to :quit, method: :relay_quit
+  listen_to :kick, method: :relay_kick
   listen_to :join, method: :relay_join
   listen_to :nick, method: :relay_nick
   listen_to :mode, method: :relay_mode
@@ -36,6 +38,7 @@ class RelayPlugin
     return if @bot.irc.network.name.nil? #not connected yet
     netname = @bot.irc.network.name.to_s
     return unless m.params[0] == "#" + $config["servers"][netname]["channel"]
+    m.user.refresh
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
     else
@@ -56,20 +59,35 @@ class RelayPlugin
     send_relay(message)
   end
   
-  def relay_part(m, actionuser = nil)
+  def relay_part(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
     return unless m.channel == "#" + $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
-    if m.command == "PART"
-      action = "parted the channel (#{m.message})"
-    elsif m.command == "QUIT"
-      action = "quit (#{m.message})"
-    else
-      action = "parted the channel"
-    end
+    m.user.refresh
     message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
-		          "has #{action}."
+		          "has parted #{m.channel.name} (#{m.message})"
+    send_relay(message)
+  end
+  
+  def relay_quit(m)
+    return if m.user.nick == @bot.nick
+    netname = @bot.irc.network.name.to_s
+    network = Format(:bold, "[#{netname}]")
+    message = "#{network} - #{m.user.nick} has quit (#{m.message})"
+    send_relay(message)
+  end
+    
+  def relay_kick(m)
+    netname = @bot.irc.network.name.to_s
+    if m.params[1].downcase == @bot.nick.downcase
+      Channel("#" + $config["servers"][netname]["channel"]).join
+      return
+    end
+    return unless m.channel == "#" + $config["servers"][netname]["channel"]
+    network = Format(:bold, "[#{netname}]")
+    message = "#{network} - #{m.params[1]} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
+		          "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
     send_relay(message)
   end
   
@@ -78,8 +96,9 @@ class RelayPlugin
     netname = @bot.irc.network.name.to_s
     return unless m.channel == "#" + $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
+    m.user.refresh
     message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
-              "has joined the channel."
+              "has joined #{m.channel.name}"
     send_relay(message)
   end
   
