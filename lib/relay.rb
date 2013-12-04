@@ -23,7 +23,7 @@ class RelayPlugin
   def relay(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == $config["servers"][netname]["channel"]
+    return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     if m.action?
       message = "#{network} * #{m.user.nick} #{m.action_message}"
@@ -37,7 +37,7 @@ class RelayPlugin
     return if m.params.nil?
     return if @bot.irc.network.name.nil? #not connected yet
     netname = @bot.irc.network.name.to_s
-    return unless m.params[0] == $config["servers"][netname]["channel"]
+    return unless m.params[0].downcase == $config["servers"][netname]["channel"].downcase
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
     else
@@ -62,7 +62,7 @@ class RelayPlugin
   def relay_part(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == $config["servers"][netname]["channel"]
+    return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
     message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
@@ -80,7 +80,7 @@ class RelayPlugin
     
   def relay_kick(m)
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == $config["servers"][netname]["channel"]
+    return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     if m.params[1].downcase == @bot.nick.downcase
       Channel($config["servers"][netname]["channel"]).join
       return
@@ -94,7 +94,7 @@ class RelayPlugin
   def relay_join(m)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s
-    return unless m.channel == $config["servers"][netname]["channel"]
+    return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
     message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
