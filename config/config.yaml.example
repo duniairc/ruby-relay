@@ -14,11 +14,14 @@ servers:
     channel: "#testone"
   
   staticbox:
+    nick: staticrelay
     server: irc.staticbox.net
     port: 6697
     ssl: true
     sasl: false
     channel: "#testtwo"
+    nickservuser: rubybot
+    nickservpass: password
 
   alphachat:
     server: irc.alphachat.net
