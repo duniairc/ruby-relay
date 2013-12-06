@@ -104,7 +104,7 @@ class RelayPlugin
   
   def send_relay(m)
     $bots.each do |network, bot|
-      unless bot.irc.network == @bot.irc.network.name.to_s.downcase
+      unless bot.irc.network.name.to_s.downcase == @bot.irc.network.name.to_s.downcase
         begin
           bot.irc.send("PRIVMSG #{$config["servers"][network]["channel"]}" + \
                        " :#{m}")
