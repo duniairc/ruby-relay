@@ -22,7 +22,7 @@ class RelayPlugin
   
   def relay(m)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     if m.action?
@@ -36,7 +36,7 @@ class RelayPlugin
   def relay_mode(m)
     return if m.params.nil?
     return if @bot.irc.network.name.nil? #not connected yet
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     return unless m.params[0].downcase == $config["servers"][netname]["channel"].downcase
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
@@ -51,7 +51,7 @@ class RelayPlugin
   
   def relay_nick(m)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     return unless m.user.channels.include? $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
     message = "#{network} - #{m.user.last_nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
@@ -61,7 +61,7 @@ class RelayPlugin
   
   def relay_part(m)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
@@ -72,14 +72,14 @@ class RelayPlugin
   
   def relay_quit(m)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     network = Format(:bold, "[#{netname}]")
     message = "#{network} - #{m.user.nick} has quit (#{m.message})"
     send_relay(message)
   end
     
   def relay_kick(m)
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     if m.params[1].downcase == @bot.nick.downcase
       Channel($config["servers"][netname]["channel"]).join
@@ -93,7 +93,7 @@ class RelayPlugin
   
   def relay_join(m)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s
+    netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
@@ -104,7 +104,7 @@ class RelayPlugin
   
   def send_relay(m)
     $bots.each do |network, bot|
-      unless bot.irc.network == @bot.irc.network
+      unless bot.irc.network == @bot.irc.network.downcase
         begin
           bot.irc.send("PRIVMSG #{$config["servers"][network]["channel"]}" + \
                        " :#{m}")

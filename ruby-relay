@@ -21,6 +21,9 @@ $bots = Hash.new
 $zncs = Hash.new
 $threads = Array.new
 
+# Make server names all downcase
+$config["servers"].map { |k, v| k.downcase! }
+
 # Set up a bot for each server
 $config["servers"].each do |name, server|
   bot = Cinch::Bot.new do
