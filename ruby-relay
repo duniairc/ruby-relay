@@ -42,7 +42,9 @@ $config["servers"].each do |name, server|
       c.server = server["server"]
       c.ssl.use = server["ssl"]
       c.port = server["port"]
-      c.channels = [server["channel"]] 
+      c.channels = [server["channel"]]
+      opts = server["msgspersec"] || $config["bot"]["msgspersec"] || nil
+      c.messages_per_second = opts unless opts.nil?
       unless server["sasl"] == false
         c.sasl.username = server["nickservname"] || $config["bot"]["nickservname"]
         c.sasl.password = server["nickservpass"] || $config["bot"]["nickservpass"]
