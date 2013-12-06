@@ -28,6 +28,10 @@ $config["servers"].each do |k, v|
 end
 $config["servers"] = servers
 
+# Make ignore names all downcase
+names = $config["ignore"]["nicks"].map { |v| v.downcase }
+$config["ignore"]["nicks"] = names
+
 # Set up a bot for each server
 $config["servers"].each do |name, server|
   bot = Cinch::Bot.new do

@@ -19,11 +19,22 @@ class RelayPlugin
   listen_to :nick, method: :relay_nick
   listen_to :mode, method: :relay_mode
   
+  def ignored_nick?(nick)
+    if $config["ignore"]["nicks"].include? nick.downcase
+      return true
+    else
+      return false
+    end
+  end
   
   def relay(m)
     return if m.user.nick == @bot.nick
+    if ignored_nick?(m.user.nick.to_s)
+      return if $config["ignore"]["ignoreprivmsg"] 
+    end
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
+    
     network = Format(:bold, "[#{netname}]")
     if m.action?
       message = "#{network} * #{m.user.nick} #{m.action_message}"
@@ -41,6 +52,7 @@ class RelayPlugin
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
     else
+      return if ignored_nick?(m.user.nick.to_s)
       m.user.refresh
       user = "#{m.user.nick} (#{m.user.mask.to_s.split("!")[1]})"
     end
@@ -51,6 +63,8 @@ class RelayPlugin
   
   def relay_nick(m)
     return if m.user.nick == @bot.nick
+    return if ignored_nick?(m.user.nick.to_s)
+    return if ignored_nick?(m.user.last_nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.user.channels.include? $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{netname}]")
@@ -61,6 +75,7 @@ class RelayPlugin
   
   def relay_part(m)
     return if m.user.nick == @bot.nick
+    return if ignored_nick?(m.user.nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
@@ -71,6 +86,7 @@ class RelayPlugin
   end
   
   def relay_quit(m)
+    return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
     network = Format(:bold, "[#{netname}]")
@@ -92,6 +108,7 @@ class RelayPlugin
   end
   
   def relay_join(m)
+    return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase

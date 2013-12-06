@@ -29,3 +29,9 @@ servers:
     ssl: true
     sasl: true
     channel: "#testthree"
+
+ignore:
+  ignoreprivmsg: true
+  nicks:
+    - somasonic
+    - nimrod
