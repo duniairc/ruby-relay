@@ -80,8 +80,13 @@ class RelayPlugin
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{netname}]")
     m.user.refresh
-    message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
-		          "has parted #{m.channel.name} (#{m.message})"
+    if m.message.to_s.downcase == m.channel.name.to_s.downcase
+      message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
+		            "has parted #{m.channel.name}"
+    else
+      message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
+		            "has parted #{m.channel.name} (#{m.message})"
+    end
     send_relay(message)
   end
   
