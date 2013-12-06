@@ -37,9 +37,9 @@ class RelayPlugin
     
     network = Format(:bold, "[#{netname}]")
     if m.action?
-      message = "#{network} * #{m.user.nick} #{m.action_message}"
+      message = "#{network} * -#{m.user.nick} #{m.action_message}"
     else
-      message = "#{network} <#{m.user.nick}> #{m.message}"
+      message = "#{network} <-#{m.user.nick}> #{m.message}"
     end
     send_relay(message)
   end
