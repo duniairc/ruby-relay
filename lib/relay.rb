@@ -39,17 +39,11 @@ class RelayPlugin
     
     network = Format(:bold, "[#{colorise(netname)}]")
     if m.action?
-<<<<<<< HEAD
-      message = "#{network} * #{m.user.nick} #{m.action_message}"
-    else
-      message = "#{network} <#{m.user.nick}> #{m.message}"
-=======
       message = "#{network} * #{colorise(m.user.nick)} " + \
                 "#{m.action_message}"
     else
       message = "#{network} <#{colorise(m.user.nick)}> " + \
                 "#{m.message}"
->>>>>>> upstream/master
     end
     send_relay(message)
   end
