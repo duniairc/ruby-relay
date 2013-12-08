@@ -38,18 +38,15 @@ class RelayPlugin
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     
     network = Format(:bold, "[#{colorise(netname)}]")
-    if $config["bot"]["nohighlights"]
-      nick = "-#{m.user.nick}"
-    else
-      nick = "#{m.user.nick}"
-    end
+    nick = colorise(m.user.nick}
+    nick = "-" + nick if $config["bot"]["nohighlights"]
+    
     if m.action?
-      message = "#{network} * #{colorise(nick)} " + \
-                "#{m.action_message}"
+      message = "#{network} * #{nick} #{m.action_message}"
     else
-      message = "#{network} <#{colorise(nick)}> " + \
-                "#{m.message}"
+      message = "#{network} <#{nick}> #{m.message}"
     end
+    
     send_relay(message)
   end
   
