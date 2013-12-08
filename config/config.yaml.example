@@ -1,10 +1,17 @@
 bot:
+  # Set nick, user/ident, and real name
   nick: ruby-relay
   user: relay
   realname: https://github.com/somasonic/ruby-relay
+  # nickservname: defines the SASL username if SASL is enabled. (it is
+  # otherwise ignored)
   nickservname: ruby-relay
   nickservpass: password
+  # Defines the maximum amount of messages the bot will send in a second to
+  # prevent it from flooding itself off. If not defined, defaults to smart
+  # defaults per IRCd.
   msgspersec: 3
+  # Enables colouring of networks and nicks by the relayer.
   usecolour: true
   # This setting prepends a - (dash) in front of nicks when people speak
   # so that they are not highlighted by the relayer bot if they are on
@@ -12,15 +19,23 @@ bot:
   nohighlights: false
 
 servers:
+  # PLEASE NOTE: the server names configured here MUST match the network name given
+  # by the IRCd in the NETWORK=Name section in its 005 (/quote version) reply, or the
+  # relayer WILL NOT work (case insensitive)!
   interlinked:
+    # Server name, port, and whether to use SSL
     server: irc.interlinked.me
     port: 6697
     ssl: true
+    # sasl: If set to true, this enables SASL authentication (not supported by all networks).
+    # If set to false, the bot will use plain-text NickServ authentication.
     sasl: true
     channel: "#testone"
     msgspersec: 10
   
   staticbox:
+    # nick, user, realname, nickservuser, nickservpass, and msgspersec can all be
+    # set on a per-network basis too.
     nick: staticrelay
     server: irc.staticbox.net
     port: 6697
@@ -38,7 +53,11 @@ servers:
     channel: "#testthree"
 
 ignore:
+  # Ignore nicks function: defines a list of nicks for the relayer to ignore
+  # joins/parts/quits/nicks/modes and PRIVMSGs (if ignoreprivmsg is true) from.
+  # The bot will ignore its own joins regardless of this setting.
   ignoreprivmsg: true
   nicks:
+    # Change this!
     - somasonic
     - nimrod
