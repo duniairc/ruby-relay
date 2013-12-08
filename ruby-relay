@@ -45,14 +45,15 @@ $config["servers"].each do |name, server|
       c.channels = [server["channel"]]
       opts = server["msgspersec"] || $config["bot"]["msgspersec"] || nil
       c.messages_per_second = opts unless opts.nil?
+      nsname = server["nickservname"] || $config["bot"]["nickservname"] || c.nick
       unless server["sasl"] == false
-        c.sasl.username = server["nickservname"] || $config["bot"]["nickservname"]
+        c.sasl.username = nsname
         c.sasl.password = server["nickservpass"] || $config["bot"]["nickservpass"]
         c.plugins.plugins = [RelayPlugin]
       else
         c.plugins.plugins = [RelayPlugin, Cinch::Plugins::Identify]
         c.plugins.options[Cinch::Plugins::Identify] = {
-          :username => $config["bot"]["nickservname"],
+          :username => nsname,
           :password => $config["bot"]["nickservpass"],
           :type     => :nickserv,
         }
