@@ -143,10 +143,9 @@ class RelayPlugin
 
 	def colorise(text) 
     return text unless $config["bot"]["usecolour"]
-    colours = ["\00300", "\00301", "\00302", "\00303",
-               "\00304", "\00305", "\00306", "\00307",
-               "\00308", "\00309", "\00310", "\00311",
-               "\00312", "\00313", "\00314", "\00315"]
+    colours = ["\00303", "\00304", "\00305", "\00306",
+               "\00307", "\00308", "\00309", "\00310", 
+               "\00311", "\00312", "\00313"]
 
     floathash = Digest::MD5.hexdigest(text.to_s).to_i(16).to_f
     index = floathash % 15
