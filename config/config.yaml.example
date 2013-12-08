@@ -5,6 +5,7 @@ bot:
   nickservname: ruby-relay
   nickservpass: password
   msgspersec: 3
+  usecolour: true
 
 servers:
   interlinked:
