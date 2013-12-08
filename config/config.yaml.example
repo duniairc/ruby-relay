@@ -6,6 +6,10 @@ bot:
   nickservpass: password
   msgspersec: 3
   usecolour: true
+  # This setting prepends a - (dash) in front of nicks when people speak
+  # so that they are not highlighted by the relayer bot if they are on
+  # multiple ends of the relay.
+  nohighlights: false
 
 servers:
   interlinked:
