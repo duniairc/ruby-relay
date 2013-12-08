@@ -53,11 +53,12 @@ servers:
     channel: "#testthree"
 
 ignore:
-  # Ignore nicks function: defines a list of nicks for the relayer to ignore
-  # joins/parts/quits/nicks/modes and PRIVMSGs (if ignoreprivmsg is true) from.
-  # The bot will ignore its own joins regardless of this setting.
+  # Ignore nicks function: defines a list of nicks (case insensitive) for
+  # the relayer to ignore joins/parts/quits/nicks/modes and PRIVMSGs
+  # (if ignoreprivmsg is true) from.
+  # The bot will ignore itself regardless of this setting.
   ignoreprivmsg: true
   nicks:
-    # Change this!
+    # Change this! (wildcards are not supported at this time)
     - somasonic
     - nimrod
