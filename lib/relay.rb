@@ -153,7 +153,7 @@ class RelayPlugin
                "\00311", "\00312", "\00313"]
 
     floathash = Digest::MD5.hexdigest(text.to_s).to_i(16).to_f
-    index = floathash % 15
+    index = floathash % 10
     return "#{colours[index]}#{text}\3"
   end
 end
