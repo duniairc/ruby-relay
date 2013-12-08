@@ -8,6 +8,8 @@
 ## See LICENSE file for details.
 ####
 
+require 'digest/md5'
+
 class RelayPlugin
   include Cinch::Plugin
   
@@ -35,11 +37,13 @@ class RelayPlugin
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     
-    network = Format(:bold, "[#{netname}]")
+    network = Format(:bold, "[#{colorise(netname)}]")
     if m.action?
-      message = "#{network} * #{m.user.nick} #{m.action_message}"
+      message = "#{network} * #{colorise(m.user.nick)} " + \
+                "#{m.action_message}"
     else
-      message = "#{network} <#{m.user.nick}> #{m.message}"
+      message = "#{network} <#{colorise(m.user.nick)}> " + \
+                "#{m.message}"
     end
     send_relay(message)
   end
@@ -54,9 +58,9 @@ class RelayPlugin
     else
       return if ignored_nick?(m.user.nick.to_s)
       m.user.refresh
-      user = "#{m.user.nick} (#{m.user.mask.to_s.split("!")[1]})"
+      user = "#{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]})"
     end
-    network = Format(:bold, "[#{@bot.irc.network.name}]")
+    network = Format(:bold, "[#{colorise(netname)}]")
     message = "#{network} - #{user} set mode #{m.params[1..-1].join(" ")} on #{m.params[0]}."
     send_relay(message)
   end
@@ -67,9 +71,9 @@ class RelayPlugin
     return if ignored_nick?(m.user.last_nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.user.channels.include? $config["servers"][netname]["channel"]
-    network = Format(:bold, "[#{netname}]")
-    message = "#{network} - #{m.user.last_nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
-              "is now known as #{m.user.nick}."
+    network = Format(:bold, "[#{colorise(netname)}]")
+    message = "#{network} - #{colorise(m.user.last_nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
+              "is now known as #{colorise(m.user.nick)}."
     send_relay(message)
   end
   
@@ -78,13 +82,13 @@ class RelayPlugin
     return if ignored_nick?(m.user.nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
-    network = Format(:bold, "[#{netname}]")
+    network = Format(:bold, "[#{colorise(netname)}]")
     m.user.refresh
     if m.message.to_s.downcase == m.channel.name.to_s.downcase
-      message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
+      message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
 		            "has parted #{m.channel.name}"
     else
-      message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
+      message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
 		            "has parted #{m.channel.name} (#{m.message})"
     end
     send_relay(message)
@@ -94,8 +98,8 @@ class RelayPlugin
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
-    network = Format(:bold, "[#{netname}]")
-    message = "#{network} - #{m.user.nick} has quit (#{m.message})"
+    network = Format(:bold, "[#{colorise(netname)}]")
+    message = "#{network} - #{colorise(m.user.nick)} has quit (#{m.message})"
     send_relay(message)
   end
     
@@ -106,8 +110,8 @@ class RelayPlugin
       Channel($config["servers"][netname]["channel"]).join
       return
     end
-    network = Format(:bold, "[#{netname}]")
-    message = "#{network} - #{m.params[1]} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
+    network = Format(:bold, "[#{colorise(netname)}]")
+    message = "#{network} - #{colorise(m.params[1])} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
 		          "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
     send_relay(message)
   end
@@ -117,9 +121,9 @@ class RelayPlugin
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
-    network = Format(:bold, "[#{netname}]")
+    network = Format(:bold, "[#{colorise(netname)}]")
     m.user.refresh
-    message = "#{network} - #{m.user.nick} (#{m.user.mask.to_s.split("!")[1]}) " + \
+    message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
               "has joined #{m.channel.name}"
     send_relay(message)
   end
@@ -135,5 +139,17 @@ class RelayPlugin
         end
       end
     end
+  end
+
+	def colorise(text) 
+    return text unless $config["bot"]["usecolour"]
+    colours = ["\00300", "\00301", "\00302", "\00303",
+               "\00304", "\00305", "\00306", "\00307",
+               "\00308", "\00309", "\00310", "\00311",
+               "\00312", "\00313", "\00314", "\00315"]
+
+    floathash = Digest::MD5.hexdigest(text.to_s).to_i(16).to_f
+    index = floathash % 15
+    return "#{colours[index]}#{text}\3"
   end
 end
