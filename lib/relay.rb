@@ -74,8 +74,7 @@ class RelayPlugin
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.user.channels.include? $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{colorise(netname)}]")
-    message = "#{network} - #{colorise(m.user.last_nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
-              "is now known as #{colorise(m.user.nick)}."
+    message = "#{network} - #{colorise(m.user.last_nick)} is now known as #{colorise(m.user.nick)}."
     send_relay(message)
   end
   
