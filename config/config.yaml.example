@@ -38,8 +38,8 @@ servers:
     # If set to false, the bot will use plain-text NickServ authentication.
     sasl: true
     
-    # channel: Remember to put quotes around channel names so it is not mistaken for a
-    # comment by YAML.
+    # channel: Make sure to add quotes around channel names so they are not mistaken for
+    # comments by YAML.
     channel: "#relaythree"
   
   staticbox:
