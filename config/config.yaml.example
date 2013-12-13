@@ -1,20 +1,20 @@
 bot:
-  # Set nick, user/ident, and real name
+  # Set nick, user/ident, and real name.
   nick: ruby-relay
   user: relay
   realname: https://github.com/somasonic/ruby-relay
   
-  # nickservname: defines the SASL username if SASL is enabled. (it is
-  # otherwise ignored)
+  # nickservname: defines the SASL username if SASL is enabled (it is
+  # otherwise ignored).
   nickservname: ruby-relay
   nickservpass: password
   
   # Defines the maximum amount of messages the bot will send in a second to
-  # prevent it from flooding itself off. If not defined, defaults to smart
-  # defaults per IRCd.
+  # prevent it from flooding itself off. If not defined, defaults to bot's
+  # smart defaults for each IRCd.
   # msgspersec: 3
   
-  # Enables colouring of networks and nicks by the relayer.
+  # Enables colouring of networks and nicks.
   usecolour: true
   
   # This setting prepends a - (dash) in front of nicks when people speak
@@ -24,11 +24,12 @@ bot:
 
 servers:
   # PLEASE NOTE: the server names configured here MUST match the network name given
-  # by the IRCd in the NETWORK=Name section in its 005 (/quote version) reply, or the
-  # relayer WILL NOT work (case insensitive)!
+  # by the IRCd in its 005 reply (case-insensitive), or the relayer WILL NOT work!
+  # To find this network name, type "/raw version" or "/quote version" (without
+  # quotes) in your IRC client, and look for the section that says "NETWORK=Name".
   
   interlinked:
-    # Server name, port, and whether to use SSL
+    # Server name, port, and whether to use SSL.
     server: irc.interlinked.me
     port: 6697
     ssl: true
@@ -37,22 +38,20 @@ servers:
     # If set to false, the bot will use plain-text NickServ authentication.
     sasl: true
     
-    # please put quotes around channel names to avoid YAML considering it
-    # a comment
+    # channel: Remember to put quotes around channel names so it is not mistaken for a
+    # comment by YAML.
     channel: "#relaythree"
-    
-    # msgspersec can be set on a per-network basis
-    # msgspersec: 10
   
   staticbox:
-    # nick, user, realname, nickservuser, nickservpass, and msgspersec can all be
-    # set on a per-network basis too.
+    # nick, user, realname, nickservuser, nickservpass, and msgspersec can also
+    # be set on a per-network basis.
     nick: staticrelay
     server: irc.staticbox.net
     port: 6697
     ssl: true
     sasl: false
     channel: "#relaytwo"
+    msgspersec: 10
     nickservuser: rubybot
     nickservpass: password
 
@@ -66,7 +65,7 @@ servers:
 ignore:
   # Ignore nicks function: defines a list of nicks (case insensitive) for
   # the relayer to ignore joins/parts/quits/nicks/modes and PRIVMSGs
-  # (if ignoreprivmsg is true) from.
+  # from (if ignoreprivmsg is true).
   # The bot will ignore itself regardless of this setting.
   
   ignoreprivmsg: true

@@ -32,7 +32,7 @@ Please join #code on irc.interlinked.me (https://webchat.interlinked.me) and pin
 Contributors
 ============
 * somasonic (https://github.com/somasonic/) - wrote most of the code
-* GLolol (https://github.com/glolol) - wrote most of the documentation
+* GLolol (https://github.com/GLolol) - wrote most of the documentation
 
 License
 =======
