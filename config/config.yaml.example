@@ -23,8 +23,8 @@ bot:
   nohighlights: false
   
 admins:
-  # List of hostmasks that can !rehash
-  - *!*@somasonic.org
+  # List of hostmasks that can use !rehash (make sure you surround each with quotes)
+  - "*!*@somasonic.org"
 
 servers:
   # PLEASE NOTE: the server names configured here MUST match the network name given
