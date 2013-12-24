@@ -22,6 +22,81 @@ class RelayPlugin
   listen_to :mode, method: :relay_mode
   
   match "nicks", method: :nicks
+  match "rehash", method: :rehash
+  
+  def is_admin?(user)
+    return false if $config["admins"].nil?
+    if $config["admins"].class == String
+      if Cinch::Mask.new($config["admins"]) =~ user.mask
+        return true
+      end
+    elsif $config["admins"].class == Array
+      $config["admins"].each do |m|
+        if Cinch::Mask.new(m) =~ user.mask
+          return true
+        else
+          next
+        end
+      end
+    end
+    return false
+  end
+  
+  def rehash(m)
+    return unless is_admin?(m.user)
+    old_config = $config
+    new_config = YAML.load_file("config/config.yaml")
+    old_config["servers"].each do |name, server|
+      if new_config["servers"].has_key? name
+        $bots[name].nick = new_config["servers"][name]["nick"] || new_config["bot"]["nick"]
+        $bots[name].channels.each do |c|
+          c.part unless c.name.to_s =~ /#{new_config["servers"][name]["channel"]}/
+          Channel(new_config["servers"][name]["channel"]).join
+        end
+      else
+        $bots[name].quit
+        $bots.delete name
+      end
+    end
+    
+    new_config["servers"].each do |name, server|
+      next if old_config["servers"].has_key? name
+      bot = Cinch::Bot.new do
+        configure do |c|
+          c.nick = server["nick"] || new_config["bot"]["nick"]
+          c.user = server["user"] || new_config["bot"]["user"]
+          c.realname = server["realname"] || new_config["bot"]["realname"]
+          c.server = server["server"]
+          c.ssl.use = server["ssl"]
+          c.port = server["port"]
+          c.channels = [server["channel"]]
+          opts = server["msgspersec"] || new_config["bot"]["msgspersec"] || nil
+          c.messages_per_second = opts unless opts.nil?
+          nsname = server["nickservname"] || new_config["bot"]["nickservname"] || c.nick
+          unless server["sasl"] == false
+            c.sasl.username = nsname
+            c.sasl.password = server["nickservpass"] || new_config["bot"]["nickservpass"]
+            c.plugins.plugins = [RelayPlugin]
+          else
+            c.plugins.plugins = [RelayPlugin, Cinch::Plugins::Identify]
+            c.plugins.options[Cinch::Plugins::Identify] = {
+              :password => new_config["bot"]["nickservpass"],
+              :type     => :nickserv,
+            }
+          end
+        end
+      end
+      bot.loggers.clear
+      bot.loggers << RelayLogger.new(name, File.open("log/irc-#{name}.log", "a"))
+      bot.loggers << RelayLogger.new(name, STDOUT)
+      bot.loggers.level = :info
+      $bots[name] = bot
+      $threads << Thread.new { bot.start }
+    end
+    
+    $config = new_config
+    m.reply "done!"
+  end
   
   def ignored_nick?(nick)
     if $config["ignore"]["nicks"].include? nick.downcase

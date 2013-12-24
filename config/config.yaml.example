@@ -21,6 +21,10 @@ bot:
   # so that they are not highlighted by the relayer bot if they are on
   # multiple ends of the relay.
   nohighlights: false
+  
+admins:
+  # List of hostmasks that can !rehash
+  - *!*@somasonic.org
 
 servers:
   # PLEASE NOTE: the server names configured here MUST match the network name given
