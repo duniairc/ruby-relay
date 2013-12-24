@@ -140,6 +140,8 @@ class RelayPlugin
       users.each do |nick, modes|
         if modes.include?("o")
           users_with_modes << "@" + nick.to_s
+        elsif modes.include?("h")
+          users_with_modes << "%" + nick.to_s
         elsif modes.include?("v")
           users_with_modes << "+" + nick.to_s
         else
