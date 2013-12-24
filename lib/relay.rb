@@ -21,6 +21,8 @@ class RelayPlugin
   listen_to :nick, method: :relay_nick
   listen_to :mode, method: :relay_mode
   
+  match "nicks", method: :nicks
+  
   def ignored_nick?(nick)
     if $config["ignore"]["nicks"].include? nick.downcase
       return true
@@ -127,6 +129,27 @@ class RelayPlugin
     message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
               "has joined #{m.channel.name}"
     send_relay(message)
+  end
+  
+  def nicks(m)
+    target = m.user
+    $bots.each do |network, bot|
+      chan = $config["servers"][network]["channel"]
+      users = bot.Channel(chan).users
+      users_with_modes = Array.new
+      
+      users.each do |nick, modes|
+        if modes.include?("o")
+          users_with_modes << "@" + nick.to_s
+        elsif modes.include?("v")
+          users_with_modes << "+" + nick.to_s
+        else
+          users_with_modes << nick.to_s
+        end
+      end
+      
+      target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
+    end
   end
   
   def send_relay(m)
