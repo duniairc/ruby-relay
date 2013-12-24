@@ -61,7 +61,6 @@ class RelayPlugin
       user = m.raw.split(":")[1].split[0]
     else
       return if ignored_nick?(m.user.nick.to_s)
-      m.user.refresh
       user = "#{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]})"
     end
     network = Format(:bold, "[#{colorise(netname)}]")
@@ -86,7 +85,6 @@ class RelayPlugin
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
-    m.user.refresh
     if m.message.to_s.downcase == m.channel.name.to_s.downcase
       message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
 		            "has parted #{m.channel.name}"
@@ -125,7 +123,6 @@ class RelayPlugin
     netname = @bot.irc.network.name.to_s.downcase
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
-    m.user.refresh
     message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
               "has joined #{m.channel.name}"
     send_relay(message)
