@@ -95,6 +95,18 @@ class RelayPlugin
     end
     
     $config = new_config
+    
+    # Make server names all downcase
+    servers = {}
+    $config["servers"].each do |k, v|
+      servers.merge!({k.downcase => v})
+    end
+    $config["servers"] = servers
+
+    # Make ignore names all downcase
+    names = $config["ignore"]["nicks"].map { |v| v.downcase }
+    
+    $config["ignore"]["nicks"] = names
     m.reply "done!"
   end
   
@@ -112,6 +124,7 @@ class RelayPlugin
       return if $config["ignore"]["ignoreprivmsg"] 
     end
     netname = @bot.irc.network.name.to_s.downcase
+    return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     
     network = Format(:bold, "[#{colorise(netname)}]")
@@ -158,6 +171,7 @@ class RelayPlugin
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
+    return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     if m.message.to_s.downcase == m.channel.name.to_s.downcase
@@ -181,6 +195,7 @@ class RelayPlugin
     
   def relay_kick(m)
     netname = @bot.irc.network.name.to_s.downcase
+    return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     if m.params[1].downcase == @bot.nick.downcase
       Channel($config["servers"][netname]["channel"]).join
@@ -196,6 +211,7 @@ class RelayPlugin
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
+    return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
