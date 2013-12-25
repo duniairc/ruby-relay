@@ -46,6 +46,18 @@ class RelayPlugin
     return unless is_admin?(m.user)
     old_config = $config
     new_config = YAML.load_file("config/config.yaml")
+    
+    # Make server names all downcase
+    servers = {}
+    new_config["servers"].each do |k, v|
+      servers.merge!({k.downcase => v})
+    end
+    new_config["servers"] = servers
+
+    # Make ignore names all downcase
+    names = new_config["ignore"]["nicks"].map { |v| v.downcase }
+    new_config["ignore"]["nicks"] = names
+    
     old_config["servers"].each do |name, server|
       if new_config["servers"].has_key? name
         $bots[name].nick = new_config["servers"][name]["nick"] || new_config["bot"]["nick"]
@@ -95,18 +107,6 @@ class RelayPlugin
     end
     
     $config = new_config
-    
-    # Make server names all downcase
-    servers = {}
-    $config["servers"].each do |k, v|
-      servers.merge!({k.downcase => v})
-    end
-    $config["servers"] = servers
-
-    # Make ignore names all downcase
-    names = $config["ignore"]["nicks"].map { |v| v.downcase }
-    
-    $config["ignore"]["nicks"] = names
     m.reply "done!"
   end
   
