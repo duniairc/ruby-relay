@@ -25,6 +25,9 @@ bot:
   # Set to true to only relay privmsgs (as opposed to JOIN/PART/MODE/PRIVMSG/NICK)
   privmsgonly: false
 
+  # Set to true to disable displaying hostmasks
+  nohostmasks: false
+
 admins:
   # List of hostmasks that can use !rehash (make sure you surround each with quotes)
   - "*!*@somasonic.org"

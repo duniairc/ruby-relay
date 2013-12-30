@@ -150,7 +150,11 @@ class RelayPlugin
       user = m.raw.split(":")[1].split[0]
     else
       return if ignored_nick?(m.user.nick.to_s)
-      user = "#{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]})"
+      if $config["bot"]["nohostmasks"]
+        user = colorise(m.user.nick)
+      else
+        user = "#{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]})"
+      end
     end
     network = Format(:bold, "[#{colorise(netname)}]")
     message = "#{network} - #{user} set mode #{m.params[1..-1].join(" ")} on #{m.params[0]}"
@@ -178,11 +182,19 @@ class RelayPlugin
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     if m.message.to_s.downcase == m.channel.name.to_s.downcase
-      message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
+      if $config["bot"]["nohostmasks"]
+        message = "#{network} - #{colorise(m.user.nick)} has parted #{m.channel.name}"
+      else
+        message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
 		            "has parted #{m.channel.name}"
+      end
     else
-      message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
+      if $config["bot"]["nohostmasks"]
+        message = "#{network} - #{colorise(m.user.nick)} has parted #{m.channel.name} (#{m.message})"
+      else
+        message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
 		            "has parted #{m.channel.name} (#{m.message})"
+      end
     end
     send_relay(message)
   end
@@ -207,8 +219,13 @@ class RelayPlugin
       return
     end
     network = Format(:bold, "[#{colorise(netname)}]")
-    message = "#{network} - #{colorise(m.params[1])} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
-		          "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
+    if $config["bot"]["nohostmasks"]
+      message = "#{network} - #{colorise(m.params[1])} has been kicked from #{m.channel.name} by" + \
+                " #{m.user.nick} (#{m.message})"
+    else
+      message = "#{network} - #{colorise(m.params[1])} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
+		            "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
+    end
     send_relay(message)
   end
   
@@ -220,8 +237,12 @@ class RelayPlugin
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
-    message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
-              "has joined #{m.channel.name}"
+    if $config["bot"]["nohostmasks"]
+      message = "#{network} - #{colorise(m.user.nick)} has joined #{m.channel.name}"
+    else
+      message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
+                "has joined #{m.channel.name}"
+    end
     send_relay(message)
   end
   
