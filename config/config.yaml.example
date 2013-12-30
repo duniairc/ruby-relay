@@ -21,7 +21,10 @@ bot:
   # so that they are not highlighted by the relayer bot if they are on
   # multiple ends of the relay.
   nohighlights: false
-  
+
+  # Set to true to only relay privmsgs (as opposed to JOIN/PART/MODE/PRIVMSG/NICK)
+  privmsgonly: false
+
 admins:
   # List of hostmasks that can use !rehash (make sure you surround each with quotes)
   - "*!*@somasonic.org"

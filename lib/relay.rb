@@ -141,6 +141,7 @@ class RelayPlugin
   end
   
   def relay_mode(m)
+    return if $config["bot"]["privmsgonly"]
     return if m.params.nil?
     return if @bot.irc.network.name.nil? #not connected yet
     netname = @bot.irc.network.name.to_s.downcase
@@ -157,6 +158,7 @@ class RelayPlugin
   end
   
   def relay_nick(m)
+    return if $config["bot"]["privmsgonly"]
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
     return if ignored_nick?(m.user.last_nick.to_s)
@@ -168,6 +170,7 @@ class RelayPlugin
   end
   
   def relay_part(m)
+    return if $config["bot"]["privmsgonly"]
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
@@ -185,6 +188,7 @@ class RelayPlugin
   end
   
   def relay_quit(m)
+    return if $config["bot"]["privmsgonly"]
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
@@ -194,6 +198,7 @@ class RelayPlugin
   end
     
   def relay_kick(m)
+    return if $config["bot"]["privmsgonly"]
     netname = @bot.irc.network.name.to_s.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
@@ -208,6 +213,7 @@ class RelayPlugin
   end
   
   def relay_join(m)
+    return if $config["bot"]["privmsgonly"]
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
