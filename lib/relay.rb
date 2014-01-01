@@ -63,7 +63,7 @@ class RelayPlugin
         $bots[name].nick = new_config["servers"][name]["nick"] || new_config["bot"]["nick"]
         $bots[name].channels.each do |c|
           c.part unless c.name.to_s =~ /#{new_config["servers"][name]["channel"]}/
-          Channel(new_config["servers"][name]["channel"]).join
+          $bots[name].Channel(new_config["servers"][name]["channel"]).join
         end
       else
         $bots[name].quit
