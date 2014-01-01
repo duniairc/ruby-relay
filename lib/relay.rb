@@ -249,6 +249,7 @@ class RelayPlugin
   def nicks(m)
     target = m.user
     total_users = 0
+    unique_users = []
     
     $bots.each do |network, bot|
       chan = $config["servers"][network]["channel"]
@@ -265,13 +266,14 @@ class RelayPlugin
         else
           users_with_modes << nick.to_s
         end
+        unique_users << nick unless unique_users.include?(nick)
       end
       
       total_users += users.size
       
       target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
     end
-    target.notice("Total users across #{$bots.size} channels: #{total_users}.")
+    target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
   end
   
   def send_relay(m)
