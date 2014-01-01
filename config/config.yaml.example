@@ -10,7 +10,7 @@ bot:
   nickservpass: password
   
   # Defines the maximum amount of messages the bot will send in a second to
-  # prevent it from flooding itself off. If not defined, defaults to bot's
+  # prevent it from flooding itself off. If not defined, defaults to the bot's
   # smart defaults for each IRCd.
   # msgspersec: 3
   
@@ -22,34 +22,38 @@ bot:
   # multiple ends of the relay.
   nohighlights: false
 
-  # Set to true to only relay privmsgs (as opposed to JOIN/PART/MODE/PRIVMSG/NICK)
+  # Set to true to only relay privmsgs (as opposed to joins/parts/quits/
+  # privmsgs/nicks/kicks/quits).
   privmsgonly: false
 
-  # Set to true to disable displaying hostmasks
+  # Set to true to disable displaying hostmasks.
   nohostmasks: false
 
 admins:
-  # List of hostmasks that can use !rehash (make sure you surround each with quotes)
+  # List of hostmasks that can use !rehash (make sure you surround each
+  # with quotes).
   - "*!*@somasonic.org"
 
 servers:
-  # PLEASE NOTE: the server names configured here MUST match the network name given
-  # by the IRCd in its 005 reply (case-insensitive), or the relayer WILL NOT work!
-  # To find this network name, type "/raw version" or "/quote version" (without
-  # quotes) in your IRC client, and look for the section that says "NETWORK=Name".
-  
+  # PLEASE NOTE: the server names configured here MUST match the network name
+  # given by the IRCd in its 005 reply (case-insensitive), or the relayer
+  # WILL NOT work! To find this network name, type "/raw version" or
+  # "/quote version" (without quotes) in your IRC client, and look for the
+  # section that says "NETWORK=Name".
+
   interlinked:
     # Server name, port, and whether to use SSL.
     server: irc.interlinked.me
     port: 6697
     ssl: true
     
-    # sasl: If set to true, this enables SASL authentication (not supported by all networks).
-    # If set to false, the bot will use plain-text NickServ authentication.
+    # sasl: If set to true, this enables SASL authentication (not supported by
+    # all networks). If set to false, the bot will use plain-text NickServ
+    # authentication.
     sasl: true
     
-    # channel: Make sure to add quotes around channel names so they are not mistaken for
-    # comments by YAML.
+    # channel: Make sure to add quotes around channel names so they are not
+    # mistaken for comments by YAML.
     channel: "#relaythree"
   
   staticbox:
@@ -74,8 +78,8 @@ servers:
 
 ignore:
   # Ignore nicks function: defines a list of nicks (case insensitive) for
-  # the relayer to ignore joins/parts/quits/nicks/modes and PRIVMSGs
-  # from (if ignoreprivmsg is true).
+  # the relayer to ignore joins/parts/quits/nicks/modes from. If ignoreprivmsg
+  # is true, it will also ignore PRIVMSGs.
   # The bot will ignore itself regardless of this setting.
   
   ignoreprivmsg: true
