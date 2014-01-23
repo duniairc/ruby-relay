@@ -20,6 +20,9 @@ class RelayPlugin
   listen_to :join, method: :relay_join
   listen_to :nick, method: :relay_nick
   listen_to :mode, method: :relay_mode
+  listen_to :join, method: :relay_connect
+  listen_to :leaving, method: :relay_disconnect
+  
   
   match "nicks", method: :nicks
   match "rehash", method: :rehash
@@ -227,6 +230,22 @@ class RelayPlugin
 		            "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
     end
     send_relay(message)
+  end
+  
+  def relay_connect(m)
+    netname = @bot.irc.network.name.to_s.downcase
+    return if m.channel.nil?
+    return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
+    return unless m.user.nick == @bot.nick
+    network = Format(:bold, "[#{colorise(netname)}]")
+    send_relay("#{network} *** Relay joined to #{m.channel.name}")
+  end
+  
+  def relay_disconnect(m, user)
+    return unless user.nick == @bot.nick
+    netname = @bot.irc.network.name.to_s.downcase
+    network = Format(:bold, "[#{colorise(netname)}]")
+    send_relay("#{network} *** Relay parted/disconnected. Attempting to reconnect/rejoin...")
   end
   
   def relay_join(m)
