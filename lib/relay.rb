@@ -233,6 +233,8 @@ class RelayPlugin
   end
   
   def relay_connect(m)
+    elapsed_time = Time.now.to_i - $start
+    return if elapsed_time < 60
     netname = @bot.irc.network.name.to_s.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
