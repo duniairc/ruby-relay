@@ -25,6 +25,7 @@ class RelayPlugin
   
   
   match "nicks", method: :nicks
+  match "networks", method: :networks
   match "rehash", method: :rehash
   
   def is_admin?(user)
@@ -295,6 +296,14 @@ class RelayPlugin
       target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
     end
     target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
+  end
+  
+  def networks(m)
+    pre_join_strs = Array.new
+    $bots.keys.each do |network|
+      pre_join_strs << "#{network}/#{$config["servers"][network]["channel"]}"
+    end
+    m.reply "I am in #{$bots.size} networks/channels: #{pre_join_strs.join(", ")}."
   end
   
   def send_relay(m)
