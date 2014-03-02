@@ -293,13 +293,13 @@ class RelayPlugin
           unique_users << nick unless unique_users.include?(nick)
         end
       
-      total_users += users.size
+        total_users += users.size
       
-      target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
-    rescue => e
-      disconnected << network
+        target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
+      rescue => e
+        disconnected << network
+      end
     end
-    
     target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
     
     unless disconnected.empty?
