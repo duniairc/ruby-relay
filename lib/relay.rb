@@ -272,30 +272,39 @@ class RelayPlugin
     target = m.user
     total_users = 0
     unique_users = []
+    disconnected = []
     
     $bots.each do |network, bot|
       chan = $config["servers"][network]["channel"]
-      users = bot.Channel(chan).users
-      users_with_modes = Array.new
+      begin
+        users = bot.Channel(chan).users
+        users_with_modes = Array.new
       
-      users.each do |nick, modes|
-        if modes.include?("o")
-          users_with_modes << "@" + nick.to_s
-        elsif modes.include?("h")
-          users_with_modes << "%" + nick.to_s
-        elsif modes.include?("v")
-          users_with_modes << "+" + nick.to_s
-        else
-          users_with_modes << nick.to_s
+        users.each do |nick, modes|
+          if modes.include?("o")
+            users_with_modes << "@" + nick.to_s
+          elsif modes.include?("h")
+            users_with_modes << "%" + nick.to_s
+          elsif modes.include?("v")
+            users_with_modes << "+" + nick.to_s
+          else
+            users_with_modes << nick.to_s
+          end
+          unique_users << nick unless unique_users.include?(nick)
         end
-        unique_users << nick unless unique_users.include?(nick)
-      end
       
       total_users += users.size
       
       target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
+    rescue => e
+      disconnected << network
     end
+    
     target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
+    
+    unless disconnected.empty?
+      target.notice("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
+    end
   end
   
   def networks(m)
