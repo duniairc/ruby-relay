@@ -75,6 +75,7 @@ servers:
     ssl: true
     sasl: true
     channel: "#relayone"
+    password: password-for-server
 
 ignore:
   # Ignore nicks function: defines a list of nicks (case insensitive) for

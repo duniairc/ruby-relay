@@ -40,6 +40,7 @@ $config["servers"].each do |name, server|
       c.nick = server["nick"] || $config["bot"]["nick"]
       c.user = server["user"] || $config["bot"]["user"]
       c.realname = server["realname"] || $config["bot"]["realname"]
+      c.password = server["password"] unless server["password"].nil?
       c.server = server["server"]
       c.ssl.use = server["ssl"]
       c.port = server["port"]
