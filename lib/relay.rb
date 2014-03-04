@@ -28,6 +28,7 @@ class RelayPlugin
   match /nicks (\S+)/, method: :nicks
   match "stats", method: :stats
   match "networks", method: :networks
+  match "channels", method: :channels
   match "rehash", method: :rehash
   
   def is_admin?(user)
@@ -352,12 +353,19 @@ class RelayPlugin
   end
   
   def networks(m)
+    reply = "I am connected to #{$bots.size} networks: #{$bots.keys.join(", ")}."
+    m.reply reply
+    sleep 0.1
+    relay_cmd_reply(reply)
+  end
+  
+  def channels(m)
     pre_join_strs = Array.new
     $bots.keys.each do |network|
       pre_join_strs << "#{network}/#{$config["servers"][network]["channel"]}"
     end
     
-    reply = "I am in #{$bots.size} networks/channels: #{pre_join_strs.join(", ")}."
+    reply = "I am in #{$bots.size} channels: #{pre_join_strs.join(", ")}."
     m.reply reply
     sleep 0.1
     relay_cmd_reply(reply)
