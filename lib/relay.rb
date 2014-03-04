@@ -25,7 +25,8 @@ class RelayPlugin
   
   
   match "nicks", method: :nicks
-  match "networks", method: :networks
+  match /nicks (\S+)/, method: :nicks
+  match "stats", method: :stats
   match "rehash", method: :rehash
   
   def is_admin?(user)
@@ -268,13 +269,25 @@ class RelayPlugin
     send_relay(message)
   end
   
-  def nicks(m)
+  def nicks(m, unetwork = nil)
     target = m.user
+
+    unless unetwork.nil?
+      unless $config["servers"].keys.map { |k| k.downcase }.include? unetwork.downcase
+        target.notice "Network #{unetwork} not found."
+        return
+      end
+    end
+    
     total_users = 0
     unique_users = []
     disconnected = []
     
     $bots.each do |network, bot|
+      unless unetwork.nil?
+        next unless network =~ /#{unetwork}/i
+      end
+      
       chan = $config["servers"][network]["channel"]
       begin
         users = bot.Channel(chan).users
@@ -300,10 +313,36 @@ class RelayPlugin
         disconnected << network
       end
     end
-    target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
+    if unetwork.nil?
+      target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
+    end
     
     unless disconnected.empty?
       target.notice("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
+    end
+  end
+  
+  def stats(m)
+    total_users = 0
+    unique_users = []
+    disconnected = []
+    
+    $bots.each do |network, bot|
+      chan = $config["servers"][network]["channel"]
+      begin
+        users = bot.Channel(chan).users
+        total_users += users.size
+        users.each do |nick, modes|
+          unique_users << nick unless unique_users.include?(nick)
+        end
+      rescue => e
+        disconnected << network
+      end
+    end
+    m.reply("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
+    
+    unless disconnected.empty?
+      m.reply("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
     end
   end
   
