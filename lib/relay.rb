@@ -27,6 +27,7 @@ class RelayPlugin
   match "nicks", method: :nicks
   match /nicks (\S+)/, method: :nicks
   match "stats", method: :stats
+  match "networks", method: :networks
   match "rehash", method: :rehash
   
   def is_admin?(user)
@@ -340,9 +341,13 @@ class RelayPlugin
       end
     end
     m.reply("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
+    sleep 0.1
+    relay_cmd_reply("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
     
     unless disconnected.empty?
       m.reply("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
+      sleep 0.1
+      relay_cmd_reply("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
     end
   end
   
