@@ -5,18 +5,18 @@ To have ruby-relay working properly, it must be properly configured!
 ## bot: block
 This block contains the basic information for your relayer.
 
-Fields marked in <font color=blue>blue</font> can be set on a per-network basis.
+*Italicized* fields can be set on a per-network basis.
 
-* <font color=blue>**nick:**</font> The nickname the relayer will use.
-* <font color=blue>**user:**</font> The username/ident the relayer will use.
-* <font color=blue>**realname:**</font> The realname the relayer will use.
-* <font color=blue>**nickservname:**</font> The username used for SASL authentication. Currently, this will *only* work on networks with SASL enabled, as not all services package support identifying *to* an account.
-* <font color=blue>**nickservpass:**</font> The password used to identify to services.
-* <font color=blue>**msgspersec:**</font> Defines the maximum amount of messages the bot will send in a second (to prevent itself from flooding off). Defaults to per-ircd smart defaults if not set.
-* **usecolour:**</font> Toggles colouring of nicks and networks in relayed messages.
-* **nohighlights:**</font> Prevent unwanted highlights by toggling whether to prepend a dash in front of relayed nicks.
-* **privmsgonly:**</font> Set to true to only relay privmsgs (as opposed to joins/parts/quits/privmsgs/nicks/kicks/quits).
-* **nohostmasks:**</font> Set to true to disable displaying hostmasks in joins and other events.
+* ***nick:*** The nickname the relayer will use.
+* ***user:*** The username/ident the relayer will use.
+* ***realname:*** The realname the relayer will use.
+* ***nickservname:*** The username used for SASL authentication. Currently, this will *only* work on networks with SASL enabled, as not all services package support identifying *to* an account.
+* ***nickservpass:*** The password used to identify to services.
+* ***msgspersec:*** Defines the maximum amount of messages the bot will send in a second (to prevent itself from flooding off). Defaults to per-ircd smart defaults if not set.
+* **usecolour:** Toggles colouring of nicks and networks in relayed messages.
+* **nohighlights:** Prevent unwanted highlights by toggling whether to prepend a dash in front of relayed nicks.
+* **privmsgonly:** Set to true to only relay privmsgs (as opposed to joins/parts/quits/privmsgs/nicks/kicks/quits).
+* **nohostmasks:** Set to true to disable displaying hostmasks in joins and other events.
 
 ## admins: block
 Defines a list of hostnames that are able to use `!rehash`.
