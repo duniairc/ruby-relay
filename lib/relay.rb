@@ -24,12 +24,12 @@ class RelayPlugin
   listen_to :leaving, method: :relay_disconnect
   
   
-  match "nicks", method: :nicks
-  match /nicks (\S+)/, method: :nicks
-  match "stats", method: :stats
-  match "networks", method: :networks
-  match "channels", method: :channels
-  match "rehash", method: :rehash
+  match /nicks/i, method: :nicks
+  match /nicks (\S+)/i, method: :nicks
+  match /stats/i, method: :stats
+  match /networks/i, method: :networks
+  match /channels/i, method: :channels
+  match /rehash/i, method: :rehash
   
   def is_admin?(user)
     return false if $config["admins"].nil?
