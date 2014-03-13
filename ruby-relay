@@ -62,7 +62,7 @@ $config["servers"].each do |name, server|
     end
   end
   bot.loggers.clear
-  bot.loggers << RelayLogger.new(name, File.open("log/irc-#{name}.log", "a"))
+  bot.loggers << RelayLogger.new(name, File.open("log/irc-#{name.downcase}.log", "a"))
   bot.loggers << RelayLogger.new(name, STDOUT)
   bot.loggers.level = :info
   $bots[name] = bot
