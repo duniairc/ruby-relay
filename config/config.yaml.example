@@ -56,11 +56,11 @@ servers:
     # mistaken for comments by YAML.
     channel: "#relaythree"
   
-  staticbox:
-    # nick, user, realname, nickservuser, nickservpass, and msgspersec can also
-    # be set on a per-network basis.
+  athemenet:
+    # nick, user, realname, nickservuser, nickservpass, password, and msgspersec
+    # can also be set on a per-network basis.
     nick: staticrelay
-    server: irc.staticbox.net
+    server: irc.atheme.org
     port: 6697
     ssl: true
     sasl: false
@@ -69,12 +69,12 @@ servers:
     nickservuser: rubybot
     nickservpass: password
 
-  alphachat:
-    server: irc.alphachat.net
+  freenode:
+    server: irc.freenode.net
     port: 6697
     ssl: true
     sasl: true
-    channel: "#relayone"
+    channel: "##relayone"
     password: password-for-server
 
 ignore:

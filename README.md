@@ -21,13 +21,15 @@ Install
     cd ruby-relay
     cp config/config.yaml.example config/config.yaml
 
-Then configure your bot by editing config/config.yaml. All configuration options are documented in the example config. Once done, you can start the bot using:
+Then configure your bot by editing config/config.yaml. All configuration options are documented in the 
+example config and the Configuration Guide. Once done, you can start the bot using:
 
     ./ruby-relay
 
 Support
 -------
 Please join #code on irc.interlinked.me (https://webchat.interlinked.me) and ping somasonic or GLolol.
+Don't forget to read the documention provided in doc/ !
 
 Contributors
 ============
