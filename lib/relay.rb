@@ -52,7 +52,7 @@ class RelayPlugin
   def rehash(m)
     return unless is_admin?(m.user)
     old_config = $config
-    new_config = YAML.load_file("config/config.yaml")
+    new_config = YAML.load_file($confname)
     
     # Make server names all downcase
     servers = {}
@@ -251,7 +251,7 @@ class RelayPlugin
     return unless user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
-    send_relay("#{network} *** Relay parted/disconnected. Attempting to reconnect/rejoin...")
+    send_relay("#{network} *** Relay parted/disconnected. Attempting to rejoin...")
   end
   
   def relay_join(m)

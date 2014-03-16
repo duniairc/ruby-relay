@@ -15,8 +15,28 @@ require 'cinch'
 require 'cinch/plugins/identify'
 require 'lib/relay'
 require 'lib/logger'
+require 'optparse'
 
-$config = YAML.load_file("config/config.yaml")
+options = {}
+options[:config] = "config/config.yaml"
+
+# Parse config argument
+opt_parser = OptionParser.new do |opts|
+  opts.banner = "Usage: ruby-relay [options]"
+
+  opts.separator ""
+  opts.separator "Options:"
+
+  opts.on("-c", "--config [CONFIG]",
+          "Specify the file to use as config") do |conf|
+    options[:config] = conf
+  end
+end
+
+opt_parser.parse!
+
+$confname = options[:config]
+$config = YAML.load_file($confname)
 $bots = Hash.new
 $zncs = Hash.new
 $threads = Array.new
