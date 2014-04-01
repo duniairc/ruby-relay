@@ -374,7 +374,7 @@ class RelayPlugin
   def relay_cmd_reply(text)
     netname = @bot.irc.network.name.to_s.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
-    relay_reply = "#{network} <#{@bot.nick}> #{text}"
+    relay_reply = "#{network} *** #{text}"
     send_relay(relay_reply)
   end
   
