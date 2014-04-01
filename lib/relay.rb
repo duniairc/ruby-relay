@@ -115,6 +115,7 @@ class RelayPlugin
     
     $config = new_config
     m.reply "done!"
+    relay_cmd_reply("Bot successfully rehashed.")
   end
   
   def ignored_nick?(nick)
