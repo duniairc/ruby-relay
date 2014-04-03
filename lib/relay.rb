@@ -34,12 +34,12 @@ class RelayPlugin
   def is_admin?(user)
     return false if $config["admins"].nil?
     if $config["admins"].class == String
-      if Cinch::Mask.new($config["admins"]) =~ user.mask
+      if Cinch::Mask.new(m.to_s.downcase) =~ user.mask.to_s.downcase
         return true
       end
     elsif $config["admins"].class == Array
       $config["admins"].each do |m|
-        if Cinch::Mask.new(m) =~ user.mask
+        if Cinch::Mask.new(m.to_s.downcase) =~ user.mask.to_s.downcase
           return true
         else
           next
