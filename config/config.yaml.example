@@ -34,6 +34,16 @@ admins:
   # with quotes).
   - "*!*@somasonic.org"
 
+events:
+  # Allows you to toggle whether to relay different nonprivmsg events, for
+  # greater customizability.
+  relayjoins: true
+  relayparts: true
+  relaykicks: true
+  relaynicks: true
+  relaymodes: true
+  relayquits: true
+  
 servers:
   # PLEASE NOTE: the server names configured here MUST match the network name
   # given by the IRCd in its 005 reply (case-insensitive), or the relayer
