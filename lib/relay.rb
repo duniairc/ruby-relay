@@ -150,7 +150,7 @@ class RelayPlugin
   
   def relay_mode(m)
     return if $config["bot"]["privmsgonly"]
-    return unless $config["events"]["relaymodes"]
+    return if $config["events"]["disablemodes"]
     return if m.params.nil?
     return if @bot.irc.network.name.nil? #not connected yet
     netname = @bot.irc.network.name.to_s.downcase
@@ -172,7 +172,7 @@ class RelayPlugin
   
   def relay_nick(m)
     return if $config["bot"]["privmsgonly"]
-    return unless $config["events"]["relaynicks"]
+    return if $config["events"]["disablenicks"]
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
     return if ignored_nick?(m.user.last_nick.to_s)
@@ -185,7 +185,7 @@ class RelayPlugin
   
   def relay_part(m)
     return if $config["bot"]["privmsgonly"]
-    return unless $config["events"]["relayparts"]
+    return if $config["events"]["disableparts"]
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
     netname = @bot.irc.network.name.to_s.downcase
@@ -212,7 +212,7 @@ class RelayPlugin
   
   def relay_quit(m)
     return if $config["bot"]["privmsgonly"]
-    return unless $config["events"]["relayquits"]
+    return if $config["events"]["disablequits"]
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
@@ -223,7 +223,7 @@ class RelayPlugin
     
   def relay_kick(m)
     return if $config["bot"]["privmsgonly"]
-    return unless $config["events"]["relaykicks"]
+    return if $config["events"]["disablekicks"]
     netname = @bot.irc.network.name.to_s.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
@@ -262,7 +262,7 @@ class RelayPlugin
   
   def relay_join(m)
     return if $config["bot"]["privmsgonly"]
-    return unless $config["events"]["relayjoins"]
+    return if $config["events"]["disablejoins"]
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
