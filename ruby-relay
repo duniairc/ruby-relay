@@ -67,7 +67,7 @@ $config["servers"].each do |name, server|
       c.channels = [server["channel"]]
       opts = server["msgspersec"] || $config["bot"]["msgspersec"] || nil
       c.messages_per_second = opts unless opts.nil?
-      nsname = server["nickservname"] || $config["bot"]["nickservname"] || c.nick
+      nsname = server["saslname"] || $config["bot"]["saslname"] || c.nick
       unless server["sasl"] == false
         c.sasl.username = nsname
         c.sasl.password = server["nickservpass"] || $config["bot"]["nickservpass"]

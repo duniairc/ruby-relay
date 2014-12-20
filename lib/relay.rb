@@ -111,9 +111,9 @@ class RelayPlugin
           c.channels = [server["channel"]]
           opts = server["msgspersec"] || new_config["bot"]["msgspersec"] || nil
           c.messages_per_second = opts unless opts.nil?
-          nsname = server["nickservname"] || new_config["bot"]["nickservname"] || c.nick
+          nsname = server["saslname"] || new_config["bot"]["saslname"] || c.nick
           unless server["sasl"] == false
-            c.sasl.username = nsname
+            c.sasl.username = saslname
             c.sasl.password = server["nickservpass"] || new_config["bot"]["nickservpass"]
             c.plugins.plugins = [RelayPlugin]
           else

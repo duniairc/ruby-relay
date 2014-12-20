@@ -4,9 +4,9 @@ bot:
   user: relay
   realname: https://github.com/somasonic/ruby-relay
 
-  # nickservname: defines the SASL username if SASL is enabled (it is
+  # saslname: defines the SASL username if SASL is enabled (it is
   # otherwise ignored).
-  nickservname: ruby-relay
+  saslname: ruby-relay
   nickservpass: password
 
   # Defines the maximum amount of messages the bot will send in a second to
@@ -38,12 +38,12 @@ admins:
 events:
   # Allows you to toggle whether to relay different nonprivmsg events, for
   # greater customizability.
-  disablejoins: true
-  disableparts: true
-  disablekicks: true
-  disablenicks: true
-  disablemodes: true
-  disablequits: true
+  disablejoins: false
+  disableparts: false
+  disablekicks: false
+  disablenicks: false
+  disablemodes: false
+  disablequits: false
 
 servers:
   # PLEASE NOTE: the server names configured here MUST match the network name
