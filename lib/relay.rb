@@ -151,7 +151,7 @@ class RelayPlugin
     if ignored_nick?(m.user.nick.to_s)
       return if $config["ignore"]["ignoreprivmsg"]
     end
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
 
@@ -173,7 +173,7 @@ class RelayPlugin
     return if $config["events"]["disablemodes"]
     return if m.params.nil?
     return if @bot.irc.network.name.nil? #not connected yet
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return unless m.params[0].downcase == $config["servers"][netname]["channel"].downcase
     if m.user.nil?
       user = m.raw.split(":")[1].split[0]
@@ -196,7 +196,7 @@ class RelayPlugin
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
     return if ignored_nick?(m.user.last_nick.to_s)
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return unless m.user.channels.include? $config["servers"][netname]["channel"]
     network = Format(:bold, "[#{colorise(netname)}]")
     message = "#{network} - #{colorise(m.user.last_nick)} is now known as #{colorise(m.user.nick)}"
@@ -208,7 +208,7 @@ class RelayPlugin
     return if $config["events"]["disableparts"]
     return if m.user.nick == @bot.nick
     return if ignored_nick?(m.user.nick.to_s)
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
@@ -235,7 +235,7 @@ class RelayPlugin
     return if $config["events"]["disablequits"]
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     message = "#{network} - #{colorise(m.user.nick)} has quit (#{m.message})"
     send_relay(message)
@@ -244,7 +244,7 @@ class RelayPlugin
   def relay_kick(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disablekicks"]
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     if m.params[1].downcase == @bot.nick.downcase
@@ -265,7 +265,7 @@ class RelayPlugin
   def relay_connect(m)
     elapsed_time = Time.now.to_i - $start
     return if elapsed_time < 60
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     return unless m.user.nick == @bot.nick
@@ -275,7 +275,7 @@ class RelayPlugin
 
   def relay_disconnect(m, user)
     return unless user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     send_relay("#{network} *** Relay parted/disconnected. Attempting to rejoin...")
   end
@@ -285,7 +285,7 @@ class RelayPlugin
     return if $config["events"]["disablejoins"]
     return if ignored_nick?(m.user.nick.to_s)
     return if m.user.nick == @bot.nick
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
     network = Format(:bold, "[#{colorise(netname)}]")
@@ -407,7 +407,7 @@ class RelayPlugin
   end
 
   def relay_cmd_reply(text)
-    netname = @bot.irc.network.name.to_s.downcase
+    netname = @bot.config.netname.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     relay_reply = "#{network} *** #{text}"
     send_relay(relay_reply)
