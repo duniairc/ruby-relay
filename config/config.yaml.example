@@ -46,12 +46,6 @@ events:
   disablequits: false
 
 servers:
-  # PLEASE NOTE: the server names configured here MUST match the network name
-  # given by the IRCd in its 005 reply (case-insensitive), or the relayer
-  # WILL NOT work! To find this network name, type "/raw version" or
-  # "/quote version" (without quotes) in your IRC client, and look for the
-  # section that says "NETWORK=Name".
-
   interlinked:
     # Server name, port, and whether to use SSL.
     server: irc.interlinked.me

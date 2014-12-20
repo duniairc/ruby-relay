@@ -10,7 +10,7 @@ This block contains the basic information for your relayer.
 * ***nick:*** The nickname the relayer will use.
 * ***user:*** The username/ident the relayer will use.
 * ***realname:*** The realname the relayer will use.
-* ***nickservname:*** The username used for SASL authentication. Currently, this will *only* work on networks with SASL enabled, as not all services package support identifying *to* an account.
+* ***saslname:*** The username to use for SASL authentication. This will *only* work on networks with SASL enabled.
 * ***nickservpass:*** The password used to identify to services.
 * ***msgspersec:*** Defines the maximum amount of messages the bot will send in a second (to prevent itself from flooding off). Defaults to per-ircd smart defaults if not set.
 * **usecolour:** Toggles colouring of nicks and networks in relayed messages.
@@ -22,7 +22,7 @@ This block contains the basic information for your relayer.
 Defines a list of hostnames that are able to use `!rehash`.
 
 ## servers: block
-Here, each network is defined in a separate block. Due to a current limitation, all network names defined here **must** match the network name given in the IRCd's 005 reply. Otherwise, the relayer will **not** work.
+Here, each network is defined in a separate block.
 
 * **server:** The server for the relayer to connect to.
 * **port:** The port for the relayer to connect to.
@@ -36,3 +36,8 @@ This block specifies any nicks that should be ignored by the relayer. (e.g. serv
 
 * **ignoreprivmsg**: Toggle whether to relayer should ignore privmsgs. If false, it will ignore only joins/parts/quits/nicks/modes.
 * **nicks**: List the nicks that should be ignored.
+
+## events: block
+This block allows enabling/disabling individual non-privmsg events, for greater customizability. This is overriden by bots::privmsgonly
+
+* **disable(joins|parts|kicks|nicks|modes|quits)**: Toggles whether this kind of message will be relayed.

@@ -2,7 +2,8 @@
 ## ruby-relay
 ## relay plugin
 ##
-## Copyright (c) 2013 Andrew Northall
+## Copyright (c) 2013-2014 Andrew Northall
+## Copyright (c) 2013-2014 James Lu
 ##
 ## MIT License
 ## See LICENSE file for details.
