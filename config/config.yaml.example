@@ -3,20 +3,20 @@ bot:
   nick: ruby-relay
   user: relay
   realname: https://github.com/somasonic/ruby-relay
-  
+
   # nickservname: defines the SASL username if SASL is enabled (it is
   # otherwise ignored).
   nickservname: ruby-relay
   nickservpass: password
-  
+
   # Defines the maximum amount of messages the bot will send in a second to
   # prevent it from flooding itself off. If not defined, defaults to the bot's
   # smart defaults for each IRCd.
   # msgspersec: 3
-  
+
   # Enables colouring of networks and nicks.
   usecolour: true
-  
+
   # This setting prepends a - (dash) in front of nicks when people speak
   # so that they are not highlighted by the relayer bot if they are on
   # multiple ends of the relay.
@@ -44,7 +44,7 @@ events:
   disablenicks: true
   disablemodes: true
   disablequits: true
-  
+
 servers:
   # PLEASE NOTE: the server names configured here MUST match the network name
   # given by the IRCd in its 005 reply (case-insensitive), or the relayer
@@ -57,16 +57,16 @@ servers:
     server: irc.interlinked.me
     port: 6697
     ssl: true
-    
+
     # sasl: If set to true, this enables SASL authentication (not supported by
     # all networks). If set to false, the bot will use plain-text NickServ
     # authentication.
     sasl: true
-    
+
     # channel: Make sure to add quotes around channel names so they are not
     # mistaken for comments by YAML.
     channel: "#relaythree"
-  
+
   athemenet:
     # nick, user, realname, nickservuser, nickservpass, password, and msgspersec
     # can also be set on a per-network basis.
@@ -93,7 +93,7 @@ ignore:
   # the relayer to ignore joins/parts/quits/nicks/modes from. If ignoreprivmsg
   # is true, it will also ignore PRIVMSGs.
   # The bot will ignore itself regardless of this setting.
-  
+
   ignoreprivmsg: true
   nicks:
     - troll1

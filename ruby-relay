@@ -45,7 +45,7 @@ $start = Time.now.to_i
 # Make server names all downcase
 servers = {}
 $config["servers"].each do |k, v|
-  servers.merge!({k.downcase => v}) 
+  servers.merge!({k.downcase => v})
 end
 $config["servers"] = servers
 

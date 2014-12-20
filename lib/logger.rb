@@ -1,5 +1,5 @@
 ####
-### ruby-relay 
+### ruby-relay
 ### logger
 ###
 ### Copyright (c) 2013 Andrew Northall

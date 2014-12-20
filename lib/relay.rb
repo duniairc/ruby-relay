@@ -31,7 +31,7 @@ end
 
 class RelayPlugin
   include Cinch::Plugin
-  
+
   listen_to :message, method: :relay
   listen_to :part, method: :relay_part
   listen_to :quit, method: :relay_quit
@@ -41,8 +41,8 @@ class RelayPlugin
   listen_to :mode, method: :relay_mode
   listen_to :join, method: :relay_connect
   listen_to :leaving, method: :relay_disconnect
-  
-  
+
+
   match /nicks/i, method: :nicks
   match /nicks (\S+)/i, method: :nicks
   match /stats/i, method: :stats
@@ -50,7 +50,7 @@ class RelayPlugin
   match /channels/i, method: :channels
   match /rehash/i, method: :rehash
   match /uptime/i, method: :uptime
-  
+
   def is_admin?(user)
     return false if $config["admins"].nil?
     if $config["admins"].class == String
@@ -68,12 +68,12 @@ class RelayPlugin
     end
     return false
   end
-  
+
   def rehash(m)
     return unless is_admin?(m.user)
     old_config = $config
     new_config = YAML.load_file($confname)
-    
+
     # Make server names all downcase
     servers = {}
     new_config["servers"].each do |k, v|
@@ -84,7 +84,7 @@ class RelayPlugin
     # Make ignore names all downcase
     names = new_config["ignore"]["nicks"].map { |v| v.downcase }
     new_config["ignore"]["nicks"] = names
-    
+
     old_config["servers"].each do |name, server|
       if new_config["servers"].has_key? name
         $bots[name].nick = new_config["servers"][name]["nick"] || new_config["bot"]["nick"]
@@ -97,7 +97,7 @@ class RelayPlugin
         $bots.delete name
       end
     end
-    
+
     new_config["servers"].each do |name, server|
       next if old_config["servers"].has_key? name
       bot = Cinch::Bot.new do
@@ -132,12 +132,12 @@ class RelayPlugin
       $bots[name] = bot
       $threads << Thread.new { bot.start }
     end
-    
+
     $config = new_config
     m.reply "done!"
     relay_cmd_reply("Bot successfully rehashed.")
   end
-  
+
   def ignored_nick?(nick)
     if $config["ignore"]["nicks"].include? nick.downcase
       return true
@@ -145,29 +145,29 @@ class RelayPlugin
       return false
     end
   end
-  
+
   def relay(m)
     return if m.user.nick == @bot.nick
     if ignored_nick?(m.user.nick.to_s)
-      return if $config["ignore"]["ignoreprivmsg"] 
+      return if $config["ignore"]["ignoreprivmsg"]
     end
     netname = @bot.irc.network.name.to_s.downcase
     return if m.channel.nil?
     return unless m.channel.name.downcase == $config["servers"][netname]["channel"].downcase
-    
+
     network = Format(:bold, "[#{colorise(netname)}]")
     nick = colorise(m.user.nick)
     nick = "-" + nick if $config["bot"]["nohighlights"]
-    
+
     if m.action?
       message = "#{network} * #{nick} #{m.action_message}"
     else
       message = "#{network} <#{nick}> #{m.message}"
     end
-    
+
     send_relay(message)
   end
-  
+
   def relay_mode(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disablemodes"]
@@ -189,7 +189,7 @@ class RelayPlugin
     message = "#{network} - #{user} set mode #{m.params[1..-1].join(" ")} on #{m.params[0]}"
     send_relay(message)
   end
-  
+
   def relay_nick(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disablenicks"]
@@ -202,7 +202,7 @@ class RelayPlugin
     message = "#{network} - #{colorise(m.user.last_nick)} is now known as #{colorise(m.user.nick)}"
     send_relay(message)
   end
-  
+
   def relay_part(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disableparts"]
@@ -217,19 +217,19 @@ class RelayPlugin
         message = "#{network} - #{colorise(m.user.nick)} has parted #{m.channel.name}"
       else
         message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
-		            "has parted #{m.channel.name}"
+                    "has parted #{m.channel.name}"
       end
     else
       if $config["bot"]["nohostmasks"]
         message = "#{network} - #{colorise(m.user.nick)} has parted #{m.channel.name} (#{m.message})"
       else
         message = "#{network} - #{colorise(m.user.nick)} (#{m.user.mask.to_s.split("!")[1]}) " + \
-		            "has parted #{m.channel.name} (#{m.message})"
+                    "has parted #{m.channel.name} (#{m.message})"
       end
     end
     send_relay(message)
   end
-  
+
   def relay_quit(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disablequits"]
@@ -240,7 +240,7 @@ class RelayPlugin
     message = "#{network} - #{colorise(m.user.nick)} has quit (#{m.message})"
     send_relay(message)
   end
-    
+
   def relay_kick(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disablekicks"]
@@ -257,11 +257,11 @@ class RelayPlugin
                 " #{m.user.nick} (#{m.message})"
     else
       message = "#{network} - #{colorise(m.params[1])} (#{User(m.params[1]).mask.to_s.split("!")[1]}) " + \
-		            "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
+                    "has been kicked from #{m.channel.name} by #{m.user.nick} (#{m.message})"
     end
     send_relay(message)
   end
-  
+
   def relay_connect(m)
     elapsed_time = Time.now.to_i - $start
     return if elapsed_time < 60
@@ -272,14 +272,14 @@ class RelayPlugin
     network = Format(:bold, "[#{colorise(netname)}]")
     send_relay("#{network} *** Relay joined to #{m.channel.name}")
   end
-  
+
   def relay_disconnect(m, user)
     return unless user.nick == @bot.nick
     netname = @bot.irc.network.name.to_s.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     send_relay("#{network} *** Relay parted/disconnected. Attempting to rejoin...")
   end
-  
+
   def relay_join(m)
     return if $config["bot"]["privmsgonly"]
     return if $config["events"]["disablejoins"]
@@ -297,7 +297,7 @@ class RelayPlugin
     end
     send_relay(message)
   end
-  
+
   def nicks(m, unetwork = nil)
     target = m.user
 
@@ -307,21 +307,21 @@ class RelayPlugin
         return
       end
     end
-    
+
     total_users = 0
     unique_users = []
     disconnected = []
-    
+
     $bots.each do |network, bot|
       unless unetwork.nil?
         next unless network =~ /#{unetwork}/i
       end
-      
+
       chan = $config["servers"][network]["channel"]
       begin
         users = bot.Channel(chan).users
         users_with_modes = Array.new
-      
+
         users.each do |nick, modes|
           if modes.include?("o")
             users_with_modes << "@" + nick.to_s
@@ -334,9 +334,9 @@ class RelayPlugin
           end
           unique_users << nick unless unique_users.include?(nick)
         end
-      
+
         total_users += users.size
-      
+
         target.notice("#{users.size} users in #{chan} on #{network}: #{users_with_modes.join(", ")}.")
       rescue => e
         disconnected << network
@@ -345,12 +345,12 @@ class RelayPlugin
     if unetwork.nil?
       target.notice("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
     end
-    
+
     unless disconnected.empty?
       target.notice("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
     end
   end
-  
+
   def uptime(m)
     t = Time.now.to_i - $start
     reply = "I have been running for #{t.duration}."
@@ -358,12 +358,12 @@ class RelayPlugin
     sleep 0.1
     relay_cmd_reply(reply)
   end
-  
+
   def stats(m)
     total_users = 0
     unique_users = []
     disconnected = []
-    
+
     $bots.each do |network, bot|
       chan = $config["servers"][network]["channel"]
       begin
@@ -379,40 +379,40 @@ class RelayPlugin
     m.reply("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
     sleep 0.1
     relay_cmd_reply("Total users across #{$bots.size} channels: #{total_users}. Unique nicknames: #{unique_users.size}.")
-    
+
     unless disconnected.empty?
       m.reply("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
       sleep 0.1
       relay_cmd_reply("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
     end
   end
-  
+
   def networks(m)
     reply = "I am connected to #{$bots.size} networks: #{$bots.keys.join(", ")}."
     m.reply reply
     sleep 0.1
     relay_cmd_reply(reply)
   end
-  
+
   def channels(m)
     pre_join_strs = Array.new
     $bots.keys.each do |network|
       pre_join_strs << "#{network}/#{$config["servers"][network]["channel"]}"
     end
-    
+
     reply = "I am in #{$bots.size} channels: #{pre_join_strs.join(", ")}."
     m.reply reply
     sleep 0.1
     relay_cmd_reply(reply)
   end
-  
+
   def relay_cmd_reply(text)
     netname = @bot.irc.network.name.to_s.downcase
     network = Format(:bold, "[#{colorise(netname)}]")
     relay_reply = "#{network} *** #{text}"
     send_relay(relay_reply)
   end
-  
+
   def send_relay(m)
     $bots.each do |network, bot|
       unless bot.irc.network.name.to_s.downcase == @bot.irc.network.name.to_s.downcase
@@ -426,10 +426,10 @@ class RelayPlugin
     end
   end
 
-	def colorise(text) 
+  def colorise(text)
     return text unless $config["bot"]["usecolour"]
     colours = ["\00303", "\00304", "\00305", "\00306",
-               "\00307", "\00308", "\00309", "\00310", 
+               "\00307", "\00308", "\00309", "\00310",
                "\00311", "\00312", "\00313"]
 
     floathash = Digest::MD5.hexdigest(text.to_s).to_i(16).to_f
