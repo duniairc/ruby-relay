@@ -10,6 +10,25 @@
 
 require 'digest/md5'
 
+class Numeric
+  def duration
+    secs  = self.to_int
+    mins  = secs / 60
+    hours = mins / 60
+    days  = hours / 24
+
+    if days > 0
+      "#{days} day#{'s' unless days == 1} and #{hours % 24} hour#{'s' unless (hours % 24) == 1}"
+    elsif hours > 0
+      "#{hours} hour#{'s' unless (hours % 24) == 1} and #{mins % 60} minute#{'s' unless (mins % 60) == 1}"
+    elsif mins > 0
+      "#{mins} minute#{'s' unless (mins % 60) == 1} and #{secs % 60} second#{'s' unless (secs % 60) == 1}"
+    elsif secs >= 0
+      "#{secs} second#{'s' unless (secs % 60) == 1}"
+    end
+  end
+end
+
 class RelayPlugin
   include Cinch::Plugin
   
@@ -30,6 +49,7 @@ class RelayPlugin
   match /networks/i, method: :networks
   match /channels/i, method: :channels
   match /rehash/i, method: :rehash
+  match /uptime/i, method: :uptime
   
   def is_admin?(user)
     return false if $config["admins"].nil?
@@ -329,6 +349,14 @@ class RelayPlugin
     unless disconnected.empty?
       target.notice("Disconnected from #{disconnected.size} networks: #{disconnected.join(", ")}.")
     end
+  end
+  
+  def uptime(m)
+    t = Time.now.to_i - $start
+    reply = "I have been running for #{t.duration}."
+    m.reply reply
+    sleep 0.1
+    relay_cmd_reply(reply)
   end
   
   def stats(m)

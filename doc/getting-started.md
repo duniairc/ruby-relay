@@ -21,3 +21,6 @@ Although the relay bot is designed to be simple, it does have a few public comma
 
 !rehash
 > Reloads the configuration file. Currently limited only to those whose hostmask matches one specified in the admins: directive in config.
+
+!uptime
+> Returns uptime information.

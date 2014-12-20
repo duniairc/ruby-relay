@@ -23,7 +23,8 @@ bot:
   nohighlights: false
 
   # Set to true to only relay privmsgs (as opposed to joins/parts/quits/
-  # privmsgs/nicks/kicks/quits).
+  # privmsgs/nicks/kicks/quits). This overrides all settings in the events
+  # section.
   privmsgonly: false
 
   # Set to true to disable displaying hostmasks.
