@@ -7,8 +7,8 @@ Dependencies and installation instructions are listed in the main README file.
 ## Commands
 ruby-relay is quite simple and only has a few public commands.
 
-`!nicks [&lt;network&gt;]`
-* Replies (in private notice) a list of users present in the relay. If <network> is specified, list only the users on that network. Do note that this output can be quite long on relays with many networks!
+`!nicks [<network>]`
+* Replies (in private notice) a list of users present in the relay. If `<network>` is specified, list only the users on that network. Do note that this output can be quite long on relays with many networks!
 
 `!stats`
 * Returns the amount of users across the relay.
