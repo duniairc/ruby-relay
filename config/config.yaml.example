@@ -7,6 +7,9 @@ bot:
   # saslname: defines the SASL username if SASL is enabled (it is
   # otherwise ignored).
   saslname: ruby-relay
+
+  # nickservpass: used for SASL authentication if it is enabled,
+  # or plain NickServ login if it's not.
   nickservpass: password
 
   # Defines the maximum amount of messages the bot will send in a second to
@@ -61,32 +64,29 @@ servers:
     # mistaken for comments by YAML.
     channel: "#relaythree"
 
-  athemenet:
-    # nick, user, realname, nickservuser, nickservpass, password, and msgspersec
-    # can also be set on a per-network basis.
-    nick: staticrelay
-    server: irc.atheme.org
+    # password: You can also define server passwords for private networks if
+    # needed. Note that this is not the services password; use 'nickservpass'
+    # for that.
+    #password: "topsecret"
+
+  freenode:
+    # nick, user, realname, saslname, nickservpass, password, and msgspersec
+    # can also be set on a per-network basis. If present, they will take
+    # precedence over the global settings defined in the 'bot' section above.
+    nick: freenoderelay
+    server: irc.freenode.net
     port: 6697
     ssl: true
     sasl: false
     channel: "#relaytwo"
     msgspersec: 10
-    nickservuser: rubybot
-    nickservpass: password
-
-  freenode:
-    server: irc.freenode.net
-    port: 6697
-    ssl: true
-    sasl: true
-    channel: "##relayone"
-    password: password-for-server
+    nickservpass: "alsotopsecret"
 
 ignore:
-  # Ignore nicks function: defines a list of nicks (case insensitive) for
-  # the relayer to ignore joins/parts/quits/nicks/modes from. If ignoreprivmsg
-  # is true, it will also ignore PRIVMSGs.
-  # The bot will ignore itself regardless of this setting.
+  # This section defines a list of nicks (case insensitive) for the relayer
+  # to ignore joins/parts/quits/nicks/modes from. If ignoreprivmsg
+  # is true, it will also ignore PRIVMSGs from these nicks.
+  # The bot will ignore its own messages regardless of this setting.
 
   ignoreprivmsg: true
   nicks:
