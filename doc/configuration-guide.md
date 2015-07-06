@@ -34,7 +34,7 @@ Here, each network is defined in a separate block.
 ## ignore: block
 This block specifies any nicks that should be ignored by the relayer. (e.g. services bots)
 
-* **ignoreprivmsg**: Toggle whether to relayer should ignore privmsgs. If false, it will ignore only joins/parts/quits/nicks/modes.
+* **ignoreprivmsg**: Toggle whether to relayer should ignore PRIVMSGs. If false, it will ignore only joins/parts/quits/nicks/modes.
 * **nicks**: List the nicks that should be ignored.
 
 ## events: block
