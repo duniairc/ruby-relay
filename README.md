@@ -2,6 +2,8 @@ ruby-relay
 ==========
 A ruby IRC relay bot that relays conversations across channels on many networks. Uses the Cinch framework.
 
+**No longer in active development, support will not be given.**
+
 Dependencies
 ------------
 The following are required to run ruby-relay:
@@ -36,7 +38,7 @@ Please join either:
 
 1) `#code` on `irc.interlinked.me` (https://webchat.interlinked.me) and ping somasonic or GLolol.
 
-2) `#dev` on `irc.overdrive.pw` (http://webchat.overdrive.pw) and ping GLolol.
+2) `#dev` on `irc.overdrivenetworks.com` (https://webchat.overdrivenetworks.com) and ping GLolol.
 
 Don't forget to read the documention provided in `doc/` !
 
